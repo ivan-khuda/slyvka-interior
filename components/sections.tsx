@@ -95,7 +95,7 @@ export function Nav({
       <nav className="nav">
         <a href="#top" className="logo">
           <span className="dot" />
-          Slyvka  asdasd<em>{t.logo.mark}</em>
+          Slyvka <em>{t.logo.mark}</em>
         </a>
         <div className="nav-links">
           <a href="#work" className="active">
