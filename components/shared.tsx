@@ -75,7 +75,7 @@ export function Placeholder({
             lineHeight: 1.5,
           }}
         >
-        {image && (
+          {image && (
             <Image src={image.url} alt={image.alt} width={1000} height={1000} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           )}
           <div style={{ position: 'absolute', bottom: 14, left: 14, right: 14 }}  >
@@ -121,7 +121,7 @@ export function ProjectCard({
           }}
         >
           <Placeholder
-            image={project.images?.[0]}
+            image={project?.images?.[0]}
             caption={project.cover || project.name}
             swatch={project.swatch}
             swatch2={project.swatch2}
@@ -317,7 +317,7 @@ export function Lightbox({ project, onClose }: { project: Project | null; onClos
           style={{ padding: '40px', display: 'flex', flexDirection: 'column', overflow: 'auto' }}
         >
           <div style={{ animation: 'slideUp 0.5s ease 0.1s both' }}>
-          
+
             {/*<Image src={project.images[imgIdx].url} alt={project.images[imgIdx].alt}
               width={1000}
               height={1000}
@@ -328,7 +328,7 @@ export function Lightbox({ project, onClose }: { project: Project | null; onClos
               }}
             />*/}
             <Placeholder
-              image={project.images[imgIdx]}
+              image={project?.images?.[imgIdx]}
               caption={captions[imgIdx]}
               swatch={imgIdx % 2 === 0 ? project.swatch : project.swatch2}
               swatch2={imgIdx % 2 === 0 ? project.swatch2 : project.swatch}
@@ -356,15 +356,17 @@ export function Lightbox({ project, onClose }: { project: Project | null; onClos
                   opacity: imgIdx === i ? 1 : 0.6,
                 }}
               >
-                <Image src={project.images[i].url} alt={project.images[i].alt}
-                width={64}
-                height={64}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-                />
+                {project.images?.[i]?.url && (
+                  <Image src={project.images?.[i]?.url} alt={project.images?.[i]?.alt}
+                    width={64}
+                    height={64}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                )}
               </button>
             ))}
           </div>

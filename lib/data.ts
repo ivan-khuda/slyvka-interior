@@ -3,7 +3,7 @@ export type Project = {
   name: string;
   location: string;
   year: string;
-  type: 'Family Home' | 'Apartment' | 'Holiday Home';
+  type: 'Family Home' | 'Apartment' | 'Holiday Home' | 'Житловий простір';
   sqm: string;
   rooms: string;
   tags: string[];
@@ -12,6 +12,11 @@ export type Project = {
   swatch2: string;
   cover?: string;
   feature?: boolean;
+  images?: {
+    id: string;
+    url: string;
+    alt: string;
+  }[];
 };
 
 export const PROJECTS: Project[] = [
@@ -369,7 +374,7 @@ export const PROJECTS: Project[] = [
         url: '/images/prague/21.jpg',
         alt: 'Дизайн проект квартири',
       },
-    ], 
+    ],
   },
   {
     id: 'archivist-flat',
