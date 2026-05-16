@@ -3,8 +3,10 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import { PROJECTS, type Project } from '@/lib/data';
 import { useI18n } from '@/lib/i18n';
+import Image from 'next/image';
 
 export function Placeholder({
+  image,
   caption,
   swatch = '#C9A6A6',
   swatch2 = '#6B3C4F',
@@ -12,6 +14,10 @@ export function Placeholder({
   label,
   style = {},
 }: {
+  image?: {
+    url: string;
+    alt: string;
+  };
   caption?: string;
   swatch?: string;
   swatch2?: string;
@@ -50,6 +56,7 @@ export function Placeholder({
             letterSpacing: '0.14em',
             textTransform: 'uppercase',
             color: 'rgba(255,255,255,0.85)',
+            zIndex: 1000,
           }}
         >
           {label}
@@ -59,9 +66,7 @@ export function Placeholder({
         <div
           style={{
             position: 'absolute',
-            bottom: 14,
-            left: 14,
-            right: 14,
+            inset: 0,
             fontFamily: 'var(--mono)',
             fontSize: 10,
             letterSpacing: '0.12em',
@@ -70,8 +75,13 @@ export function Placeholder({
             lineHeight: 1.5,
           }}
         >
-          <span style={{ opacity: 0.6 }}>image · </span>
-          {caption}
+        {image && (
+            <Image src={image.url} alt={image.alt} width={1000} height={1000} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          )}
+          <div style={{ position: 'absolute', bottom: 14, left: 14, right: 14 }}  >
+            <span style={{ opacity: 0.6 }}>image · </span>
+            {caption}
+          </div>
         </div>
       )}
     </div>
@@ -111,6 +121,7 @@ export function ProjectCard({
           }}
         >
           <Placeholder
+            image={project.images?.[0]}
             caption={project.cover || project.name}
             swatch={project.swatch}
             swatch2={project.swatch2}
@@ -237,6 +248,19 @@ export function Lightbox({ project, onClose }: { project: Project | null; onClos
     'reading corner — texture close-up',
     'plan view — overall composition',
     'exterior — context',
+    'detail — joinery & material study',
+    'kitchen — morning light',
+    'reading corner — texture close-up',
+    'plan view — overall composition',
+    'exterior — context',
+    'detail — joinery & material study',
+    'kitchen — morning light',
+    'reading corner — texture close-up',
+    'plan view — overall composition',
+    'exterior — context',
+    'detail — joinery & material study',
+    'kitchen — morning light',
+    'reading corner — texture close-up',
   ];
 
   return (
@@ -293,7 +317,18 @@ export function Lightbox({ project, onClose }: { project: Project | null; onClos
           style={{ padding: '40px', display: 'flex', flexDirection: 'column', overflow: 'auto' }}
         >
           <div style={{ animation: 'slideUp 0.5s ease 0.1s both' }}>
+          
+            {/*<Image src={project.images[imgIdx].url} alt={project.images[imgIdx].alt}
+              width={1000}
+              height={1000}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />*/}
             <Placeholder
+              image={project.images[imgIdx]}
               caption={captions[imgIdx]}
               swatch={imgIdx % 2 === 0 ? project.swatch : project.swatch2}
               swatch2={imgIdx % 2 === 0 ? project.swatch2 : project.swatch}
@@ -320,7 +355,17 @@ export function Lightbox({ project, onClose }: { project: Project | null; onClos
                   transition: 'all 0.2s ease',
                   opacity: imgIdx === i ? 1 : 0.6,
                 }}
-              />
+              >
+                <Image src={project.images[i].url} alt={project.images[i].alt}
+                width={64}
+                height={64}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+                />
+              </button>
             ))}
           </div>
         </div>

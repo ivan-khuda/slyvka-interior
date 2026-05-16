@@ -10,6 +10,7 @@ export default function App() {
   const [lang, setLang] = useState<Lang>('en');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [openProject, setOpenProject] = useState<Project | null>(null);
+  console.log("openProject", openProject);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
