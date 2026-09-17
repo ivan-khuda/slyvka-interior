@@ -2,16 +2,33 @@
   "name": "slyvka-interior-next",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "payload migrate && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "payload": "payload",
+    "generate:types": "payload generate:types",
+    "generate:importmap": "payload generate:importmap",
+    "migrate": "payload migrate",
+    "migrate:create": "payload migrate:create",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "seed": "payload run scripts/seed.ts"
   },
   "dependencies": {
+    "@payloadcms/db-postgres": "3.89.0",
+    "@payloadcms/live-preview-react": "3.89.0",
+    "@payloadcms/next": "3.89.0",
+    "@payloadcms/storage-vercel-blob": "3.89.0",
+    "@payloadcms/ui": "3.89.0",
+    "graphql": "^16.11.0",
     "next": "16.2.6",
+    "payload": "3.89.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

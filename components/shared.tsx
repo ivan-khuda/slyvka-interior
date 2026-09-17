@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState, type CSSProperties } from 'react';
-import { PROJECTS, type Project } from '@/lib/data';
+import type { Project } from '@/lib/data';
+import { useContent } from '@/lib/content-context';
 import { useI18n } from '@/lib/i18n';
 import Image from 'next/image';
 
@@ -98,6 +99,8 @@ export function ProjectCard({
   size?: 'normal' | 'tall' | 'wide';
 }) {
   const [hovered, setHovered] = useState(false);
+  const { projects } = useContent();
+  const { t } = useI18n();
   const aspect = size === 'tall' ? '3 / 4' : size === 'wide' ? '4 / 3' : '4 / 5';
 
   return (
@@ -126,7 +129,7 @@ export function ProjectCard({
             swatch={project.swatch}
             swatch2={project.swatch2}
             ratio={aspect}
-            label={project.type}
+            label={t.project_types[project.type] || project.type}
           />
         </div>
         <div
@@ -167,7 +170,7 @@ export function ProjectCard({
           </div>
         </div>
         <div className="mono" style={{ color: 'var(--fg-soft)', flexShrink: 0, paddingTop: 6 }}>
-          {String(PROJECTS.indexOf(project) + 1).padStart(2, '0')}
+          {String(projects.findIndex((p) => p.id === project.id) + 1).padStart(2, '0')}
         </div>
       </div>
     </button>
@@ -223,6 +226,7 @@ export function Marquee({ items, separator = '✶', speed = 60 }: { items: strin
 export function Lightbox({ project, onClose }: { project: Project | null; onClose: () => void }) {
   const [imgIdx, setImgIdx] = useState(0);
   const { t } = useI18n();
+  const { projects } = useContent();
 
   useEffect(() => {
     if (!project) return;
@@ -286,7 +290,7 @@ export function Lightbox({ project, onClose }: { project: Project | null; onClos
         }}
       >
         <div className="mono" style={{ color: 'var(--fg-soft)' }}>
-          {t.lightbox.project} · {String(PROJECTS.indexOf(project) + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}
+          {t.lightbox.project} · {String(projects.findIndex((p) => p.id === project.id) + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
         </div>
         <button
           onClick={onClose}
