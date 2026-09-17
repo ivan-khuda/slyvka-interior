@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { PROJECTS, PRESS, FILTER_IDS, type Project } from '@/lib/data';
+import { FILTER_IDS, type Project } from '@/lib/data';
+import { useContent } from '@/lib/content-context';
 import { useI18n, type Lang } from '@/lib/i18n';
 import { Marquee, Placeholder, ProjectCard } from './shared';
 
@@ -386,10 +387,11 @@ export function Services() {
 
 export function Work({ onOpen }: { onOpen: (p: Project) => void }) {
   const { t } = useI18n();
+  const { projects } = useContent();
   const [filter, setFilter] = useState<string>('all');
   const filtered = useMemo(
-    () => (filter === 'all' ? PROJECTS : PROJECTS.filter((p) => p.tags.includes(filter))),
-    [filter],
+    () => (filter === 'all' ? projects : projects.filter((p) => p.tags.includes(filter))),
+    [filter, projects],
   );
 
   return (
@@ -499,7 +501,9 @@ export function Work({ onOpen }: { onOpen: (p: Project) => void }) {
 
 export function CaseStudy({ onOpen }: { onOpen: (p: Project) => void }) {
   const { t } = useI18n();
-  const p = PROJECTS[1];
+  const { projects } = useContent();
+  const p = projects[1] ?? projects[0];
+  if (!p) return null;
   return (
     <section id="study" style={{ padding: '140px 40px', background: 'var(--cream-2)', borderBottom: '1px solid var(--line)' }}>
       <div className="eyebrow">{t.study.eyebrow}</div>
@@ -540,9 +544,9 @@ export function CaseStudy({ onOpen }: { onOpen: (p: Project) => void }) {
           >
             {(
               [
-                ['74 m²', t.study.stat_area],
-                ['11 mo', t.study.stat_time],
-                ['1', t.study.stat_color],
+                [t.study.stat_area_value, t.study.stat_area],
+                [t.study.stat_time_value, t.study.stat_time],
+                [t.study.stat_color_value, t.study.stat_color],
               ] as Array<[string, string]>
             ).map(([n, l]) => (
               <div key={l}>
@@ -594,6 +598,7 @@ export function CaseStudy({ onOpen }: { onOpen: (p: Project) => void }) {
 
 export function Press() {
   const { t } = useI18n();
+  const { press } = useContent();
   return (
     <section style={{ padding: '80px 40px', borderBottom: '1px solid var(--line)' }}>
       <div
@@ -602,7 +607,7 @@ export function Press() {
       >
         <div className="eyebrow">{t.press}</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(28px, 4vw, 60px)', alignItems: 'baseline' }}>
-          {PRESS.map((p) => (
+          {press.map((p) => (
             <div key={p.name} style={{ textAlign: 'center' }}>
               <div className="display italic" style={{ fontSize: 'clamp(20px, 2.4vw, 30px)' }}>
                 {p.name}
@@ -648,11 +653,7 @@ export function Contact() {
               <div className="mono" style={{ opacity: 0.6 }}>
                 {t.contact.studio}
               </div>
-              <div style={{ marginTop: 10, fontSize: 16, lineHeight: 1.6 }}>
-                14 Virmenska St., 2nd floor
-                <br />
-                Lviv 79008, Ukraine
-              </div>
+              <div style={{ marginTop: 10, fontSize: 16, lineHeight: 1.6, whiteSpace: 'pre-line' }}>{t.contact.address}</div>
             </div>
             <div>
               <div className="mono" style={{ opacity: 0.6 }}>
@@ -667,7 +668,7 @@ export function Contact() {
                 {t.contact.direct}
               </div>
               <a
-                href="mailto:hello@slyvka.studio"
+                href={`mailto:${t.contact.email}`}
                 style={{
                   marginTop: 10,
                   display: 'block',
@@ -678,19 +679,19 @@ export function Contact() {
                   paddingBottom: 4,
                 }}
               >
-                hello@slyvka.studio
+                {t.contact.email}
               </a>
             </div>
             <div>
               <div className="mono" style={{ opacity: 0.6 }}>
                 {t.contact.tel}
               </div>
-              <div style={{ marginTop: 10, fontFamily: 'var(--serif)', fontSize: 22 }}>+380 32 297 0418</div>
+              <div style={{ marginTop: 10, fontFamily: 'var(--serif)', fontSize: 22 }}>{t.contact.phone}</div>
             </div>
           </div>
 
           <a
-            href="mailto:hello@slyvka.studio"
+            href={`mailto:${t.contact.email}`}
             style={{
               marginTop: 60,
               padding: '18px 30px',
@@ -732,9 +733,9 @@ export function Footer() {
           </div>
         </div>
         <div className="m-footer-links" style={{ display: 'flex', gap: 40 }}>
-          {['Instagram', 'Pinterest', 'Are.na', 'Newsletter'].map((s) => (
-            <a key={s} href="#" style={{ fontSize: 13, borderBottom: '1px solid rgba(244,239,232,0.3)', paddingBottom: 4 }}>
-              {s}
+          {t.footer.socials.map((s) => (
+            <a key={s.label} href={s.url} style={{ fontSize: 13, borderBottom: '1px solid rgba(244,239,232,0.3)', paddingBottom: 4 }}>
+              {s.label}
             </a>
           ))}
         </div>
